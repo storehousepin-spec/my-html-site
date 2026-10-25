@@ -101,6 +101,9 @@ button,input,select,textarea{font:inherit; color:inherit}
 .acts{display:flex; gap:8px; margin-left:auto}
 .ico{display:inline-flex; align-items:center; justify-content:center; gap:4px; height:40px; min-width:40px; padding:0 12px; border:1.5px solid var(--edge); border-radius:10px; background:var(--surface); color:var(--ink); text-decoration:none; cursor:pointer; font-size:13px}
 .ico:hover{border-color:var(--sign)}
+.acts{flex-wrap:wrap; justify-content:flex-end}
+.ico.eat[aria-pressed="true"]{background:var(--sign); color:var(--sign-ink); border-color:var(--sign); font-weight:700}
+.card.eaten{background:var(--soft)}
 .ico svg{display:block}
 
 /* views + bottom bar */
@@ -110,6 +113,14 @@ button,input,select,textarea{font:inherit; color:inherit}
 .bar button{flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; border:1.5px solid transparent; background:none; padding:6px 0; min-height:54px; color:var(--muted); font-weight:500; font-size:13px; border-radius:12px; cursor:pointer}
 .bar button svg{display:block}
 .bar button[aria-selected="true"]{color:var(--sign); background:var(--soft); border-color:var(--edge); font-weight:700}
+/* pick */
+.pk{text-align:center; align-items:stretch; gap:10px; padding:24px 20px 20px}
+.pk-l{margin:0; font-size:13px; letter-spacing:.2em; color:var(--muted)}
+.pk-t{margin:0; font-family:var(--font-display); font-weight:900; font-size:30px; line-height:1.3; color:var(--sign); overflow-wrap:anywhere; min-height:1.3em}
+.pk-m{justify-content:center}
+.pk-i{margin:0; font-size:14px; color:var(--muted); overflow-wrap:anywhere}
+.pk-b{display:flex; flex-direction:column; gap:10px; margin-top:8px}
+.pk.spin .pk-t{opacity:.6}
 /* backup */
 .seg{display:grid; grid-template-columns:1fr 1fr; gap:8px}
 .seg .chip{padding:10px 14px; font-size:15px; font-weight:700; border-radius:12px}
@@ -186,14 +197,14 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
   <details class="add" id="addBox" open>
     <summary>新增店家</summary>
     <div class="add-body">
-    <label id="paste-label" for="paste">貼上想收藏的店</label>
+    <label id="paste-label" for="paste">貼上食記網址、YouTube 影片、Google 地圖連結或店名</label>
     <textarea id="paste"></textarea>
     <div class="row">
       <button class="btn primary" id="go" type="button">自動收納</button>
       <span class="hint" id="mode"></span>
     </div>
     <p id="status" role="status"></p>
-    <p class="hint">網頁無法直接查詢 Google 地圖。只貼店名時，請按卡片上的地圖圖示查看地址，再到「編輯」貼上地址，縣市和區域會自動填入。</p>
+    <p class="hint">網頁無法讀取連結裡的內容，貼連結時請在旁邊加上店名。Google 地圖長連結會自動取出店名。只貼店名時，請按卡片上的地圖圖示查看地址，再到「編輯」貼上地址，縣市和區域會自動填入。</p>
     </div>
   </details>
 
@@ -209,6 +220,10 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
     <div>
       <p class="chips-label">類別</p>
       <div class="chips" id="catChips"></div>
+    </div>
+    <div>
+      <p class="chips-label">吃過了嗎</p>
+      <div class="chips" id="eatChips"></div>
     </div>
   </section>
 
@@ -234,6 +249,7 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
     </div>
   </details>
   <section class="filters" id="rfilters" hidden aria-label="食譜篩選">
+    <button type="button" class="btn primary block" id="rpick">今天吃什麼？抽食譜</button>
     <input class="search" id="rq" type="search" placeholder="搜尋菜名、食材" aria-label="搜尋食譜">
     <div>
       <p class="chips-label">類別</p>
@@ -255,6 +271,22 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
   <button type="button" role="tab" id="navBackup" data-view="backup" aria-selected="false"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>備份</button>
 </div></nav>
 
+
+<dialog id="pickdlg" aria-labelledby="pk-title">
+  <div class="dlg pk">
+    <p class="pk-l" id="pk-l">今天吃什麼</p>
+    <h2 class="pk-t" id="pk-title"></h2>
+    <div class="rmeta pk-m" id="pk-meta"></div>
+    <p class="pk-i" id="pk-ing"></p>
+    <div class="pk-b">
+      <button type="button" class="btn primary block" id="pk-view">看完整食譜</button>
+      <div class="two">
+        <button type="button" class="btn block" id="pk-again">再抽一次</button>
+        <button type="button" class="btn block" id="pk-close">關閉</button>
+      </div>
+    </div>
+  </div>
+</dialog>
 
 <dialog id="rdlg">
   <form class="dlg" id="rForm" method="dialog">
@@ -292,6 +324,7 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
       <label class="fld"><span>評分</span><select id="f-rating"></select></label>
     </div>
     <label class="fld"><span>地址（貼上 Google 地圖的地址，縣市和區域會自動填入）</span><input id="f-address" maxlength="120"></label>
+    <label class="fld"><span>食記／影片連結</span><input id="f-url" type="text" inputmode="url" maxlength="500" placeholder="https://"></label>
     <label class="fld"><span>推薦菜色或亮點</span><input id="f-rec" maxlength="80"></label>
     <div class="two">
       <label class="fld"><span>價位</span><input id="f-price" maxlength="20" placeholder="例：NT$150"></label>
@@ -325,7 +358,7 @@ var LS_KEY='shicang.foods.v1';
 
 var $=function(id){return document.getElementById(id)};
 var foods=[];
-var ui={city:'',district:'',cat:'',q:''};
+var ui={city:'',district:'',cat:'',eat:'',q:''};
 var store={col:null};
 var sampleFn=null;
 var freshIds={};
@@ -350,10 +383,19 @@ function guessCat(t){
   return '小吃';
 }
 function mapUrl(f){
+  if(f.mapLink&&!f.address)return f.mapLink;
   var q=f.address?(f.name+' '+f.address):[f.name,f.city,f.district].filter(Boolean).join(' ');
   return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
 }
+function httpOnly(v){ v=str(v); return /^https?:\/\//i.test(v)?v.slice(0,500):''; }
 function clean(o){
+  var x=clean0(o);
+  if(o&&o.url!==undefined)x.url=httpOnly(o.url);
+  if(o&&o.mapLink!==undefined)x.mapLink=httpOnly(o.mapLink);
+  if(o&&o.eaten!==undefined)x.eaten=!!o.eaten;
+  return x;
+}
+function clean0(o){
   o=o||{};
   var r=parseInt(o.rating,10); if(!(r>=0))r=0; if(r>5)r=5;
   var tags=Array.isArray(o.tags)?o.tags:(typeof o.tags==='string'?o.tags.split(/[,，、]/):[]);
@@ -457,10 +499,10 @@ function setMode(kind){
   if(kind==='local'||kind==='local-fallback')parts.push('資料只存在這個瀏覽器');
   el.textContent=parts.join('；');
 }
-async function ingest(){
-  var text=$('paste').value.trim();
-  if(!text){ setStatus('請先貼上店家資訊。',true); return; }
-  var btn=$('go'); btn.disabled=true; btn.textContent='解析中…'; setStatus('');
+var URL_RE=/https?:\/\/[^\s<>"'）)]+/g;
+function isMaps(u){ return /google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/i.test(u); }
+function placeName(u){ var m=u.match(/maps\/place\/([^\/?#]+)/); if(!m)return ''; try{ return decodeURIComponent(m[1].replace(/\+/g,' ')); }catch(e){ return ''; } }
+async function aiParse(text){
   var items=[], note='';
   if(sampleFn){
     try{
@@ -475,6 +517,43 @@ async function ingest(){
     }
   }
   if(!items.length){ items=localParse(text); if(!note&&sampleFn)note='AI 沒有找到店家，已改用簡易規則。'; }
+  return {items:items,note:note};
+}
+async function ingest(){
+  var text=$('paste').value.trim();
+  if(!text){ setStatus('請先貼上網址或店家資訊。',true); return; }
+  var btn=$('go'); btn.disabled=true; btn.textContent='解析中…'; setStatus('');
+  var blocks=splitBlocks(text).slice(0,20), plain=[], linked=[], needName=0, notes=[], aiUsed=0, items=[];
+  blocks.forEach(function(b){
+    var urls=b.match(URL_RE)||[];
+    if(!urls.length){ plain.push(b); return; }
+    var src='', ml='', pn='';
+    urls.forEach(function(u){
+      u=u.replace(/[)）、，。]+$/,'');
+      if(isMaps(u)){ if(!ml){ ml=u; pn=placeName(u); } }
+      else if(!src)src=u;
+    });
+    var own=b.replace(URL_RE,' ').replace(/\s+/g,' ').trim();
+    if(!own&&pn)own=pn;
+    if(!own){ needName++; return; }
+    linked.push({own:own,pn:pn,src:src,ml:ml});
+  });
+  for(var li=0;li<linked.length;li++){
+    var L=linked[li], r;
+    if(aiUsed<5){ r=await aiParse(L.own); aiUsed++; } else r={items:localParse(L.own),note:''};
+    if(r.note)notes.push(r.note);
+    var first=r.items[0]; if(!first)continue;
+    if(L.pn&&(!first.name||first.name==='未命名店家'||L.own===L.pn))first.name=L.pn;
+    if(L.src)first.url=L.src;
+    if(L.ml)first.mapLink=L.ml;
+    items.push(first);
+  }
+  if(plain.length){
+    var r2=await aiParse(plain.join('\n\n'));
+    items=items.concat(r2.items); if(r2.note)notes.push(r2.note);
+  }
+  var note=notes[0]||'';
+  var nameMsg=needName?(' 有 '+needName+' 個網址沒有店名。網頁無法讀取連結裡的內容，請在網址旁加上店名再貼一次。'):'';
   var cleaned=items.map(clean).filter(function(x){return x.name});
   var added=[], dup=0, keys={};
   foods.forEach(function(f){ keys[f.name+'|'+f.district]=1; });
@@ -490,18 +569,19 @@ async function ingest(){
     freshIds={}; added.forEach(function(a){freshIds[a.id]=1});
     var cs={}; added.forEach(function(a){cs[a.city||'未分類']=1});
     var ck=Object.keys(cs);
-    ui={city:ck.length===1?ck[0]:'',district:'',cat:'',q:''}; $('q').value='';
+    ui={city:ck.length===1?ck[0]:'',district:'',cat:'',eat:'',q:''}; $('q').value='';
     $('paste').value='';
     var names=added.slice(0,3).map(function(a){return a.name}).join('、');
     var miss=added.filter(function(a){return !a.city}).length;
     var msg='已收納 '+added.length+' 間：'+names+(added.length>3?' 等':'')+'。';
     if(dup)msg+=' 另有 '+dup+' 間已收藏過。';
     if(miss)msg+=' 有 '+miss+' 間判斷不出縣市，已放在「未分類」，可按編輯補上。';
+    msg+=nameMsg;
     if(note)msg=note+' '+msg;
-    setStatus(msg,!!(miss||note));
+    setStatus(msg,!!(miss||note||needName));
     render();
   }else{
-    setStatus(dup?('這 '+dup+' 間店已經收藏過了。'):(note||'沒有找到店家資訊，請補上店名後再試。'),true);
+    setStatus(dup?('這 '+dup+' 間店已經收藏過了。'+nameMsg):(nameMsg.trim()||note||'沒有找到店家資訊，請補上店名後再試。'),true);
   }
 }
 
@@ -513,7 +593,7 @@ function stars(r){ return r>0?'<span class="stars" role="img" aria-label="評分
 var PIN='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z" fill="#EA4335"/><circle cx="12" cy="9" r="2.7" fill="#fff"/></svg>';
 
 function cardHtml(f){
-  var h='<article class="card'+(freshIds[f.id]?' fresh':'')+'">';
+  var h='<article class="card'+(freshIds[f.id]?' fresh':'')+(f.eaten?' eaten':'')+'">';
   h+='<div class="card-top"><span class="stamp">'+esc(f.category||'其他')+'</span>'+stars(f.rating||0)+'</div>';
   h+='<h4>'+esc(f.name)+'</h4>';
   if(f.recommend)h+='<p class="rec"><b>推薦</b>'+esc(f.recommend)+'</p>';
@@ -521,7 +601,9 @@ function cardHtml(f){
   if(!f.city)h+='<p class="need">尚未判斷縣市與地點 <button type="button" data-edit="'+esc(f.id)+'">補上資訊</button></p>';
   if(f.tags&&f.tags.length)h+='<div class="tags">'+f.tags.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div>';
   h+='<div class="card-foot"><span class="price">'+esc(f.price||'')+'</span><div class="acts">';
+  h+='<button type="button" class="ico eat" data-eat="'+esc(f.id)+'" aria-pressed="'+(f.eaten?'true':'false')+'" title="點一下切換已吃／還未吃">'+(f.eaten?'✓ 已吃':'還未吃')+'</button>';
   h+='<a class="ico" href="'+esc(mapUrl(f))+'" target="_blank" rel="noopener noreferrer" title="在 Google 地圖開啟" aria-label="在 Google 地圖開啟 '+esc(f.name)+'">'+PIN+'</a>';
+  if(f.url)h+='<a class="ico" href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer" title="開啟食記或影片" aria-label="開啟 '+esc(f.name)+' 的食記或影片"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>食記/影片</a>';
   h+='<button type="button" class="ico" data-edit="'+esc(f.id)+'" aria-label="編輯 '+esc(f.name)+'">編輯</button>';
   h+='</div></div></article>';
   return h;
@@ -532,7 +614,7 @@ function render(){
   if(has&&!addTouched){ addTouched=true; $('addBox').open=false; }
   $('empty').hidden=has; $('filters').hidden=!has;
   var cities={}; foods.forEach(function(f){ var c=f.city||'未分類'; cities[c]=(cities[c]||0)+1; });
-  window.__foodStats=has?'共 <b>'+foods.length+'</b> 間，<b>'+Object.keys(cities).length+'</b> 個縣市':'';
+  window.__foodStats=has?'共 <b>'+foods.length+'</b> 間，已吃 <b>'+foods.filter(function(f){return f.eaten}).length+'</b> 間，<b>'+Object.keys(cities).length+'</b> 個縣市':'';
   if((document.body.dataset.view||'food')==='food')$('stats').innerHTML=window.__foodStats;
   if(!has){ $('list').innerHTML=''; return; }
 
@@ -555,6 +637,8 @@ function render(){
   var ch=chip('全部',null,!ui.cat,'data-cat=""','sm');
   CATS.forEach(function(c){ if(cats[c])ch+=chip(c,cats[c],ui.cat===c,'data-cat="'+esc(c)+'"','sm'); });
   $('catChips').innerHTML=ch;
+  var nEat=foods.filter(function(f){return f.eaten}).length;
+  $('eatChips').innerHTML=chip('全部',null,!ui.eat,'data-eatf=""','sm')+chip('還未吃',foods.length-nEat,ui.eat==='no','data-eatf="no"','sm')+chip('已吃',nEat,ui.eat==='yes','data-eatf="yes"','sm');
 
   var q=norm(ui.q.toLowerCase());
   var list=foods.filter(function(f){
@@ -562,6 +646,8 @@ function render(){
     if(ui.city&&c!==ui.city)return false;
     if(ui.district&&d!==ui.district)return false;
     if(ui.cat&&(f.category||'其他')!==ui.cat)return false;
+    if(ui.eat==='yes'&&!f.eaten)return false;
+    if(ui.eat==='no'&&f.eaten)return false;
     if(q){ var hay=norm([f.name,f.recommend,f.address,f.city,f.district,f.category,(f.tags||[]).join(' ')].join(' ').toLowerCase()); if(hay.indexOf(q)<0)return false; }
     return true;
   });
@@ -594,7 +680,7 @@ function openEdit(id){
   fillSelect($('f-rating'),[['0','未評分'],['1','1 顆星'],['2','2 顆星'],['3','3 顆星'],['4','4 顆星'],['5','5 顆星']],String(f.rating||0));
   $('f-address').value=f.address||'';
   $('f-rec').value=f.recommend||'';
-  $('f-price').value=f.price||'';
+  $('f-price').value=f.price||''; $('f-url').value=f.url||'';
   $('f-tags').value=(f.tags||[]).join('，');
   var d=$('del'); d.textContent='刪除'; d.dataset.armed='';
   var dlg=$('dlg'); if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open','');
@@ -611,10 +697,13 @@ $('filters').addEventListener('click',function(e){
   if(b.hasAttribute('data-city')){ ui.city=b.getAttribute('data-city'); ui.district=''; }
   else if(b.hasAttribute('data-district')){ ui.district=b.getAttribute('data-district'); }
   else if(b.hasAttribute('data-cat')){ ui.cat=b.getAttribute('data-cat'); }
+  else if(b.hasAttribute('data-eatf')){ ui.eat=b.getAttribute('data-eatf'); }
   else return;
   freshIds={}; render();
 });
-$('list').addEventListener('click',function(e){
+$('list').addEventListener('click',async function(e){
+  var t=e.target.closest('[data-eat]');
+  if(t){ var f=foods.find(function(x){return x.id===t.getAttribute('data-eat')}); if(f){ freshIds={}; await commit(Object.assign({},f,{eaten:!f.eaten})); } return; }
   var b=e.target.closest('[data-edit]'); if(b)openEdit(b.getAttribute('data-edit'));
 });
 $('cancel').addEventListener('click',closeEdit);
@@ -637,7 +726,7 @@ $('editForm').addEventListener('submit',async function(e){
   var c=clean({
     name:$('f-name').value, city:$('f-city').value, district:$('f-district').value, category:$('f-cat').value,
     address:$('f-address').value, recommend:$('f-rec').value, price:$('f-price').value,
-    rating:$('f-rating').value, tags:$('f-tags').value
+    rating:$('f-rating').value, tags:$('f-tags').value, url:$('f-url').value
   });
   if(!c.name)return;
   var upd=Object.assign({},f,c);
@@ -892,6 +981,7 @@ function render(){
   var ch=chip('全部',recipes.length,!ui.cat,'data-rcat=""');
   RCATS.forEach(function(c){ if(cats[c])ch+=chip(c,cats[c],ui.cat===c,'data-rcat="'+esc(c)+'"'); });
   $('rcatChips').innerHTML=ch;
+  var pn=pool().length; $('rpick').textContent='今天吃什麼？抽食譜（'+pn+' 道）'; $('rpick').disabled=!pn;
   var q=ui.q.toLowerCase();
   var list=recipes.filter(function(r){
     if(ui.cat&&(r.category||'其他')!==ui.cat)return false;
@@ -941,6 +1031,64 @@ $('rForm').addEventListener('submit',async function(e){
 });
 
 /* ---------- boot ---------- */
+function pool(){
+  var q=ui.q.toLowerCase();
+  return recipes.filter(function(r){
+    if(ui.cat&&(r.category||'其他')!==ui.cat)return false;
+    if(q){ var hay=[r.title,(r.ingredients||[]).join(' '),(r.steps||[]).join(' ')].join(' ').toLowerCase(); if(hay.indexOf(q)<0)return false; }
+    return true;
+  });
+}
+var pickId='', spinning=false, spinTimer=null;
+function rnd(n){
+  if(window.crypto&&crypto.getRandomValues){ var a=new Uint32Array(1); crypto.getRandomValues(a); return a[0]%n; }
+  return Math.floor(Math.random()*n);
+}
+function showPick(r){
+  pickId=r.id;
+  $('pk-title').textContent=r.title;
+  var m='<span>'+esc(r.category||'其他')+'</span>';
+  if(r.time)m+='<span>'+esc(r.time)+'</span>';
+  if(r.servings)m+='<span>'+esc(r.servings)+'</span>';
+  $('pk-meta').innerHTML=m;
+  var names=(r.ingredients||[]).slice(0,6).map(function(x){return splitIng(x).n});
+  $('pk-ing').textContent=names.length?'主要食材：'+names.join('、')+((r.ingredients||[]).length>6?' 等':''):'';
+}
+function pick(){
+  var list=pool(); if(!list.length||spinning)return;
+  var choices=list.length>1?list.filter(function(r){return r.id!==pickId}):list;
+  var final=choices[rnd(choices.length)];
+  var dlg=$('pickdlg');
+  if(!dlg.open){ if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open',''); }
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce||list.length===1){ showPick(final); return; }
+  spinning=true; $('pk-again').disabled=true; $('pk-view').disabled=true; dlg.querySelector('.pk').classList.add('spin');
+  $('pk-ing').textContent=''; $('pk-meta').innerHTML=''; $('pk-l').textContent='抽選中…';
+  var n=0;
+  spinTimer=setInterval(function(){
+    $('pk-title').textContent=list[rnd(list.length)].title;
+    if(++n>=12){
+      clearInterval(spinTimer); spinTimer=null; spinning=false;
+      showPick(final); $('pk-l').textContent='今天就吃這道';
+      $('pk-again').disabled=false; $('pk-view').disabled=false; dlg.querySelector('.pk').classList.remove('spin');
+    }
+  },80);
+}
+function closePick(){
+  if(spinTimer){ clearInterval(spinTimer); spinTimer=null; spinning=false; }
+  $('pk-again').disabled=false; $('pk-view').disabled=false; $('pickdlg').querySelector('.pk').classList.remove('spin');
+  var dlg=$('pickdlg'); if(dlg.close)dlg.close(); else dlg.removeAttribute('open');
+}
+$('rpick').addEventListener('click',function(){ pickId=''; pick(); });
+$('pk-again').addEventListener('click',pick);
+$('pk-close').addEventListener('click',closePick);
+$('pk-view').addEventListener('click',function(){
+  var id=pickId; closePick(); if(!id)return;
+  ui={cat:'',q:''}; $('rq').value=''; fresh={}; fresh[id]=1; render();
+  var el=$('rlist').querySelector('.rcard.fresh');
+  if(el){ var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches; el.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'}); }
+});
+$('pickdlg').addEventListener('close',function(){ if(spinTimer){ clearInterval(spinTimer); spinTimer=null; spinning=false; } });
 async function restoreRecipes(list,mode){
   var idOk=/^[A-Za-z0-9_\-.~:@+]{1,100}$/, items=[], seen={}, added=0, skipped=0, removed=0, i;
   list.forEach(function(o,k){
