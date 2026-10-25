@@ -11,6 +11,20 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#C95A08">
 </head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-wand" viewBox="0 0 24 24"><path d="M4.5 19.5L15 9"/><path d="M13.5 7.5l3 3"/><path d="M18 3v3M16.5 4.5h3M7 3.5V6M5.75 4.75h2.5M20 13v2.5M18.75 14.25h2.5"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></symbol>
+<symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5"/><g fill="currentColor" stroke="none"><circle cx="9" cy="9" r="1.2"/><circle cx="15" cy="9" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="9" cy="15" r="1.2"/><circle cx="15" cy="15" r="1.2"/></g></symbol>
+<symbol id="i-spinner" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19l-4 1z"/><path d="M14.5 6.5l3 3"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 7c-1.5-1.5-4-2-8.5-2v13c4.5 0 7 .5 8.5 2 1.5-1.5 4-2 8.5-2V5c-4.5 0-7 .5-8.5 2zM12 7v13"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></symbol>
+<symbol id="i-pot" viewBox="0 0 24 24"><path d="M5 10h14v7a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-7zM5 12.5H2.5M19 12.5h2.5M9 7c-.6-.8.6-1.4 0-2.2M13 7c-.6-.8.6-1.4 0-2.2"/></symbol>
+<symbol id="i-fork" viewBox="0 0 24 24"><path d="M7 3v7a2 2 0 0 0 2 2v9M5 3v6M9 3v6M15 21V3c2.5 1 4 4 4 7.5 0 1.5-1 2.5-2 2.5h-2"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" fill-rule="evenodd" d="M12 22s7-6.2 7-12.5A7 7 0 0 0 5 9.5C5 15.8 12 22 12 22zM12 7a2.6 2.6 0 1 1 0 5.2A2.6 2.6 0 0 1 12 7z"/></symbol>
+</defs></svg>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@900&display=swap">
 <style>
 /* Layout: 手繪餐桌插圖置頂的框線畫框，下方橘色分頁(縣市)、單欄大卡片，全部用橘色細框線界定 */
@@ -51,7 +65,7 @@ button,input,select,textarea{font:inherit; color:inherit}
 .add[open]>summary{border-bottom:1.5px dashed var(--line); border-radius:12px 12px 0 0}
 .add-body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:12px}
 .add label{font-weight:700}
-#paste{width:100%; min-height:112px; resize:vertical; padding:12px; border:1.5px solid var(--edge); border-radius:10px; background:var(--bg); line-height:1.6}
+#paste,#rPaste{width:100%; min-height:112px; resize:vertical; padding:12px; border:1.5px solid var(--edge); border-radius:10px; background:var(--bg); line-height:1.6}
 .row{display:flex; flex-wrap:wrap; align-items:center; gap:10px 12px}
 .btn{border:1.5px solid var(--edge); background:var(--surface); padding:8px 16px; border-radius:10px; cursor:pointer; min-height:40px}
 .btn:hover{border-color:var(--sign)}
@@ -139,6 +153,37 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 .sel{width:100%;padding:10px;border:1.5px solid var(--edge);border-radius:10px;background:var(--surface);min-height:44px}
 .sel-l{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);min-width:0}
 #bkMsg{min-height:1.6em;margin:0;font-size:14px}#bkMsg.warn{color:var(--warn)}
+.bk2{border:1.5px solid var(--edge);border-radius:16px;background:var(--surface);overflow:hidden}
+.bk2-h{background:var(--soft);padding:12px 16px;font-size:14px;color:var(--muted);border-bottom:1.5px solid var(--line)}
+.bk2-b{padding:16px;display:flex;flex-direction:column;gap:12px}
+.bk2-b p{margin:0}
+.bk2 .btn{width:100%;min-height:52px;font-weight:700;border-radius:14px;display:inline-flex;align-items:center;justify-content:center}
+.bk2 textarea{width:100%;min-height:130px;padding:12px;border:1.5px solid var(--edge);border-radius:12px;background:var(--bg);font-size:14px;resize:vertical}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill span{display:inline-block;padding:10px 18px;border:1.5px solid var(--edge);border-radius:999px;cursor:pointer;background:var(--surface);font-weight:500}
+.pill input:checked+span{background:var(--sign);color:var(--sign-ink);border-color:var(--sign);font-weight:700}
+.pill input:focus-visible+span{outline:3px solid var(--sign);outline-offset:2px}
+#mainTabs .tab,#bkTabs .tab{padding:9px 6px;text-align:center}
+#rStatus{min-height:1.6em;margin:0;font-size:14px}#rStatus.warn{color:var(--warn)}
+.fld textarea{padding:9px 10px;border:1.5px solid var(--edge);border-radius:10px;background:var(--bg);width:100%;min-height:90px;resize:vertical}
+.rdet summary{cursor:pointer;color:var(--sign);font-weight:700;font-size:14px;min-height:32px}
+.pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin:4px 0 8px}
+.rdet-b b{color:var(--sign);font-size:13px;letter-spacing:.1em}
+.botnav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:var(--bg);border-top:1.5px solid var(--edge)}
+.botnav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;padding:6px 4px;border:1.5px solid transparent;border-radius:14px;background:transparent;color:var(--muted);font-size:12px;cursor:pointer}
+.botnav button i{font-size:20px}
+.botnav button[aria-selected="true"]{background:var(--soft);border-color:var(--edge);color:var(--sign);font-weight:700}
+body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
+#bkTabs .tab{border-radius:14px;font-weight:700;min-height:46px;padding:10px 6px}
+.bk2{border-radius:20px}
+.botnav svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.botnav svg .f{fill:currentColor;fill-opacity:.08}
+.botnav button[aria-selected="true"] svg .f{fill-opacity:.25}
+.ic{display:inline-block;width:1.2em;height:1.2em;vertical-align:-.22em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic-spin{animation:icspin .9s linear infinite}
+.ic-bounce{animation:icbounce .6s ease-in-out infinite alternate}
+@keyframes icspin{to{transform:rotate(360deg)}}
+@keyframes icbounce{to{transform:translateY(-3px) rotate(15deg)}}
 </style>
 
 <div class="wrap">
@@ -150,19 +195,15 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
     <p class="stats" id="stats" aria-live="polite"></p>
   </header>
 
-  <nav class="grid grid-cols-2 gap-2" id="mainTabs" role="tablist" aria-label="分頁">
-    <button type="button" class="tab" role="tab" aria-selected="true" data-view="food"><i class="fa-solid fa-bowl-rice mr-1"></i>美食收藏</button>
-    <button type="button" class="tab" role="tab" aria-selected="false" data-view="backup"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>備份</button>
-  </nav>
-
+  
   <div class="view" id="viewFood">
   <details class="add" id="addBox" open>
-    <summary><span><i class="fa-solid fa-circle-plus mr-2"></i>新增店家</span></summary>
+    <summary><span><svg class="ic mr-2" aria-hidden="true"><use href="#i-plus"/></svg>新增店家</span></summary>
     <div class="add-body">
     <label id="paste-label" for="paste">貼上食記網址、YouTube 影片、Google 地圖連結或店名</label>
 <textarea id="paste"></textarea>
     <div class="row">
-      <button class="btn primary" id="go" type="button"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>自動收納</button>
+      <button class="btn primary" id="go" type="button"><svg class="ic mr-1" aria-hidden="true"><use href="#i-wand"/></svg>自動收納</button>
       <span class="hint" id="mode"></span>
     </div>
     <p id="status" role="status"></p>
@@ -186,28 +227,67 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
   </div>
 </div>
 
-  <div class="view" id="viewBackup" hidden>
-    <section class="bk">
-      <h2><i class="fa-solid fa-file-export mr-2"></i>匯出備份</h2>
-      <div class="flex flex-wrap gap-2">
-        <button class="btn primary" id="bkDl" type="button"><i class="fa-solid fa-download mr-1"></i>下載 JSON</button>
-        <button class="btn" id="bkCopy" type="button"><i class="fa-solid fa-copy mr-1"></i>複製 JSON 文字</button>
+  <div class="view" id="viewRecipe" hidden>
+    <button class="btn primary w-full" id="rPick" type="button" style="min-height:52px;font-size:17px"><svg class="ic mr-2" aria-hidden="true"><use href="#i-dice"/></svg>今天吃什麼？隨機抽一道</button>
+    <details class="add" id="rAddBox">
+      <summary><span><svg class="ic mr-2" aria-hidden="true"><use href="#i-plus"/></svg>新增食譜</span></summary>
+      <div class="add-body">
+        <label for="rPaste">貼上食譜網址、YouTube 影片或食譜內文</label>
+        <textarea id="rPaste"></textarea>
+        <div class="row">
+          <button class="btn primary" id="rGo" type="button"><svg class="ic mr-1" aria-hidden="true"><use href="#i-wand"/></svg>自動收納</button>
+          <button class="btn" id="rManual" type="button"><svg class="ic mr-1" aria-hidden="true"><use href="#i-pen"/></svg>手動新增</button>
+        </div>
+        <p id="rStatus" role="status"></p>
+      </div>
+    </details>
+    <p class="stats" id="rStats" aria-live="polite"></p>
+    <section class="filters" id="rFilters" hidden aria-label="食譜篩選">
+      <input class="search" id="rq" type="search" placeholder="搜尋食譜名稱、食材" aria-label="搜尋食譜">
+      <div class="grid grid-cols-2 gap-2">
+        <label class="sel-l">類別<select class="sel" id="rSelCat"></select></label>
+        <label class="sel-l">做過了嗎<select class="sel" id="rSelCook"></select></label>
       </div>
     </section>
-    <section class="bk">
-      <h2><i class="fa-solid fa-file-import mr-2"></i>還原備份</h2>
-      <div class="flex flex-col gap-2" role="radiogroup" aria-label="還原方式">
-        <label class="flex items-center gap-2"><input type="radio" name="rmode" value="merge" checked><span><b>合併</b>（保留現有）</span></label>
-        <label class="flex items-center gap-2"><input type="radio" name="rmode" value="replace"><span><b>覆蓋</b>（取代現有）</span></label>
+    <main id="rList"></main>
+    <div class="empty" id="rEmpty"><strong>還沒有食譜</strong></div>
+  </div>
+
+  <div class="view" id="viewBackup" hidden>
+    <div class="grid grid-cols-2 gap-2" id="bkTabs" role="tablist" aria-label="備份類型">
+      <button type="button" class="tab" role="tab" aria-selected="true" data-bk="food">美食備份</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" data-bk="recipe">食譜備份</button>
+    </div>
+    <section class="bk2">
+      <div class="bk2-h" id="bkTitle">備份</div>
+      <div class="bk2-b">
+        <p class="hint" id="bkCount"></p>
+        <button class="btn primary" id="bkDl" type="button">下載 JSON 備份</button>
+        <button class="btn" id="bkCopy" type="button">複製 JSON 文字</button>
       </div>
-      <label class="btn cursor-pointer inline-flex items-center justify-center"><i class="fa-solid fa-folder-open mr-1"></i>選擇備份檔案<input type="file" id="bkFile" accept=".json,application/json" hidden></label>
-      <label class="sel-l" for="bkPaste">貼上 JSON 文字</label>
-      <textarea id="bkPaste" spellcheck="false"></textarea>
-      <button class="btn primary" id="bkPasteGo" type="button"><i class="fa-solid fa-clipboard-check mr-1"></i>貼上還原</button>
-      <p id="bkMsg" role="status"></p>
+    </section>
+    <section class="bk2">
+      <div class="bk2-h">還原</div>
+      <div class="bk2-b">
+        <div class="pills" role="radiogroup" aria-label="還原方式">
+          <label class="pill"><input class="sr-only" type="radio" name="rmode" value="merge" checked><span>合併（保留現有）</span></label>
+          <label class="pill"><input class="sr-only" type="radio" name="rmode" value="replace"><span>覆蓋（取代現有）</span></label>
+        </div>
+        <label class="btn cursor-pointer">選擇備份檔案<input type="file" id="bkFile" accept=".json,application/json" hidden></label>
+        <label class="hint" for="bkPaste">或貼上 JSON 文字</label>
+        <textarea id="bkPaste" spellcheck="false" placeholder="貼上備份內容"></textarea>
+        <button class="btn primary" id="bkPasteGo" type="button">還原</button>
+        <p id="bkMsg" role="status"></p>
+      </div>
     </section>
   </div>
 </div>
+
+<nav class="botnav" id="mainTabs" role="tablist" aria-label="分頁">
+  <button type="button" role="tab" aria-selected="true" data-view="food"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M3.5 11.5h17c0 4.4-3.6 7.5-8.5 7.5s-8.5-3.1-8.5-7.5z"/><path d="M8.5 21h7"/><path d="M8 3.5c-.8.9.8 1.7 0 2.7M12 3c-.8 1 .8 1.9 0 3M16 3.5c-.8.9.8 1.7 0 2.7"/><path d="M15.5 9.5l5-5.5"/></svg><span>美食</span></button>
+  <button type="button" role="tab" aria-selected="false" data-view="recipe"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M12 7c-1.5-1.5-4-2-8.5-2v13c4.5 0 7 .5 8.5 2 1.5-1.5 4-2 8.5-2V5c-4.5 0-7 .5-8.5 2z"/><path d="M12 7v13"/><path d="M6.5 9h2.5M6.5 12h2.5M15 9h2.5"/><path d="M16.2 12v4.5M15 12v1.6a1.2 1.2 0 0 0 2.4 0V12"/></svg><span>食譜</span></button>
+  <button type="button" role="tab" aria-selected="false" data-view="backup"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M7.5 18.5h9.2a4 4 0 0 0 .9-7.9 5.5 5.5 0 0 0-10.6-1.4 4.7 4.7 0 0 0 .5 9.3z"/><path d="M12 16v-5m0 0l-2.2 2.2M12 11l2.2 2.2"/></svg><span>備份</span></button>
+</nav>
 
 <dialog id="dlg">
   <form class="dlg" id="editForm" method="dialog">
@@ -229,13 +309,50 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
       <label class="fld"><span>標籤（用逗號分隔）</span><input id="f-tags" maxlength="40"></label>
     </div>
     <div class="dlg-foot">
-      <button class="btn danger" type="button" id="del"><i class="fa-solid fa-trash mr-1"></i>刪除</button>
+      <button class="btn danger" type="button" id="del"><svg class="ic mr-1" aria-hidden="true"><use href="#i-trash"/></svg>刪除</button>
       <span class="row">
         <button class="btn" type="button" id="cancel">取消</button>
         <button class="btn primary" type="submit" id="save">儲存</button>
       </span>
     </div>
   </form>
+</dialog>
+
+<dialog id="rdlg">
+  <form class="dlg" id="rForm" method="dialog">
+    <h2 id="rdTitle">食譜</h2>
+    <label class="fld"><span>食譜名稱</span><input id="r-name" required maxlength="40"></label>
+    <div class="two">
+      <label class="fld"><span>類別</span><select id="r-cat"></select></label>
+      <label class="fld"><span>烹調時間</span><input id="r-time" maxlength="20" placeholder="例：30 分鐘"></label>
+    </div>
+    <div class="two">
+      <label class="fld"><span>評分</span><select id="r-rating"></select></label>
+      <label class="fld"><span>標籤（用逗號分隔）</span><input id="r-tags" maxlength="40"></label>
+    </div>
+    <label class="fld"><span>食譜連結／影片</span><input id="r-url" type="text" inputmode="url" maxlength="500" placeholder="https://"></label>
+    <label class="fld"><span>食材</span><textarea id="r-ing" maxlength="2000"></textarea></label>
+    <label class="fld"><span>作法</span><textarea id="r-steps" maxlength="5000" style="min-height:140px"></textarea></label>
+    <div class="dlg-foot">
+      <button class="btn danger" type="button" id="rdel"><svg class="ic mr-1" aria-hidden="true"><use href="#i-trash"/></svg>刪除</button>
+      <span class="row">
+        <button class="btn" type="button" id="rcancel">取消</button>
+        <button class="btn primary" type="submit">儲存</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="pickDlg">
+  <div class="dlg">
+    <p class="hint text-center" id="pickHint"><svg class="ic mr-1" aria-hidden="true"><use href="#i-dice"/></svg>今天吃…</p>
+    <h2 id="pickName" class="text-center" style="font-size:26px;min-height:1.4em;overflow-wrap:anywhere"></h2>
+    <div id="pickBody" class="flex flex-col gap-2"></div>
+    <div class="dlg-foot">
+      <button class="btn" type="button" id="pickClose">關閉</button>
+      <button class="btn primary" type="button" id="pickAgain"><svg class="ic mr-1" aria-hidden="true"><use href="#i-dice"/></svg>再抽一次</button>
+    </div>
+  </div>
 </dialog>
 
 <script>
@@ -386,7 +503,7 @@ async function parseOne(block){
 async function ingest(){
   var text=$('paste').value.trim();
   if(!text){ setStatus('請先貼上網址或店家資訊。',true); return; }
-  var btn=$('go'); btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-1"></i>解析中…'; setStatus('');
+  var btn=$('go'); btn.disabled=true; btn.innerHTML='<svg class="ic mr-1 ic-spin" aria-hidden="true"><use href="#i-spinner"/></svg>解析中…'; setStatus('');
   var blocks=splitBlocks(text).slice(0,20), items=[], fails=0;
   try{
     for(var b=0;b<blocks.length;b++){ var r=await parseOne(blocks[b]); items.push(r.item); if(r.failed)fails++; }
@@ -402,7 +519,7 @@ async function ingest(){
     it.id=newId(); it.createdAt=Date.now()+i;
     await commit(it); added.push(it);
   }
-  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-wand-magic-sparkles mr-1"></i>自動收納';
+  btn.disabled=false; btn.innerHTML='<svg class="ic mr-1" aria-hidden="true"><use href="#i-wand"/></svg>自動收納';
   if(added.length){
     freshIds={}; added.forEach(function(a){freshIds[a.id]=1});
     var cs={}; added.forEach(function(a){cs[a.city||'未分類']=1});
@@ -427,7 +544,7 @@ function chip(label,count,pressed,attrs,cls){
   return '<button type="button" class="chip'+(cls?' '+cls:'')+'" aria-pressed="'+(pressed?'true':'false')+'" '+attrs+'>'+esc(label)+(count!=null?'<span class="n">'+count+'</span>':'')+'</button>';
 }
 function stars(r){ return r>0?'<span class="stars" role="img" aria-label="評分 '+r+' 顆星">'+'★'.repeat(r)+'☆'.repeat(5-r)+'</span>':'<span></span>'; }
-var PIN='<i class="fa-solid fa-location-dot" style="color:#EA4335;font-size:20px" aria-hidden="true"></i>';
+var PIN='<svg class="ic" style="color:#EA4335;font-size:20px" aria-hidden="true"><use href="#i-pin"/></svg>';
 
 function cardHtml(f){
   var h='<article class="card'+(freshIds[f.id]?' fresh':'')+(f.eaten?' eaten':'')+'">';
@@ -439,15 +556,16 @@ function cardHtml(f){
   if(!f.city)h+='<p class="need">尚未判斷縣市與地點 <button type="button" data-edit="'+esc(f.id)+'">補上資訊</button></p>';
   if(f.tags&&f.tags.length)h+='<div class="tags">'+f.tags.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div>';
   h+='<div class="card-foot"><span class="price">'+esc(f.price||'')+'</span><div class="acts">';
-  h+='<button type="button" class="ico eat" data-eat="'+esc(f.id)+'" aria-pressed="'+(f.eaten?'true':'false')+'" title="點一下切換已吃／還未吃"><i class="fa-solid '+(f.eaten?'fa-circle-check':'fa-utensils')+'" aria-hidden="true"></i>'+(f.eaten?'已吃':'還未吃')+'</button>';
+  h+='<button type="button" class="ico eat" data-eat="'+esc(f.id)+'" aria-pressed="'+(f.eaten?'true':'false')+'" title="點一下切換已吃／還未吃"><svg class="ic" aria-hidden="true"><use href="#i-'+(f.eaten?'check':'fork')+'"/></svg>'+(f.eaten?'已吃':'還未吃')+'</button>';
   h+='<a class="ico" href="'+esc(mapUrl(f))+'" target="_blank" rel="noopener noreferrer" title="在 Google 地圖開啟" aria-label="在 Google 地圖開啟 '+esc(f.name)+'">'+PIN+'</a>';
-  if(f.url)h+='<a class="ico" href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer" title="開啟食記／影片" aria-label="開啟食記或影片"><i class="fa-solid fa-book-open" aria-hidden="true"></i></a>';
-  h+='<button type="button" class="ico" data-edit="'+esc(f.id)+'" aria-label="編輯 '+esc(f.name)+'"><i class="fa-solid fa-pen" aria-hidden="true"></i>編輯</button>';
+  if(f.url)h+='<a class="ico" href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer" title="開啟食記／影片" aria-label="開啟食記或影片"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></a>';
+  h+='<button type="button" class="ico" data-edit="'+esc(f.id)+'" aria-label="編輯 '+esc(f.name)+'"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>編輯</button>';
   h+='</div></div></article>';
   return h;
 }
 
 function render(){
+  bkSync();
   var has=foods.length>0;
   if(has&&!addTouched){ addTouched=true; $('addBox').open=false; }
   $('empty').hidden=has; $('filters').hidden=!has;
@@ -515,7 +633,7 @@ function openEdit(id){
   $('f-rec').value=f.recommend||'';
   $('f-price').value=f.price||''; $('f-url').value=f.url||'';
   $('f-tags').value=(f.tags||[]).join('，');
-  var d=$('del'); d.innerHTML='<i class="fa-solid fa-trash mr-1"></i>刪除'; d.dataset.armed='';
+  var d=$('del'); d.innerHTML='<svg class="ic mr-1" aria-hidden="true"><use href="#i-trash"/></svg>刪除'; d.dataset.armed='';
   var dlg=$('dlg'); if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open','');
 }
 function closeEdit(){ var dlg=$('dlg'); if(dlg.close)dlg.close(); else dlg.removeAttribute('open'); editingId=null; }
@@ -532,7 +650,7 @@ $('selEat').addEventListener('change',function(e){ ui.eat=e.target.value; freshI
 document.querySelectorAll('#mainTabs [data-view]').forEach(function(b){
   b.addEventListener('click',function(){
     var v=b.getAttribute('data-view');
-    $('viewFood').hidden=v!=='food'; $('viewBackup').hidden=v!=='backup';
+    $('viewFood').hidden=v!=='food'; $('viewRecipe').hidden=v!=='recipe'; $('viewBackup').hidden=v!=='backup';
     document.querySelectorAll('#mainTabs [data-view]').forEach(function(x){ x.setAttribute('aria-selected',x===b?'true':'false'); });
     window.scrollTo(0,0);
   });
@@ -569,38 +687,228 @@ $('editForm').addEventListener('submit',async function(e){
   closeEdit(); await commit(upd);
 });
 
-/* ---------- backup ---------- */
+/* ---------- recipes ---------- */
+var RKEY='shicang.recipes.v1', recipes=[], rui={cat:'',cook:'',q:''}, rFresh={}, rEditing='', lastPick='', pickTimer=null;
+var RCATS=['主食','肉類','海鮮','蔬菜','湯品','點心','飲品','其他'];
+var RCAT_KW=[['點心',/蛋糕|餅乾|布丁|甜點|麵包|吐司|鬆餅|奶酪|冰淇淋|馬芬|塔/],['飲品',/飲|茶|咖啡|奶昔|果汁|豆漿/],['湯品',/湯|羹|火鍋/],['主食',/飯|麵|粥|餅|包子|餃|饅頭|丼|義大利|燉飯|炒米粉/],['海鮮',/魚|蝦|蟹|蛤|蚵|花枝|透抽|海鮮|干貝|鮭/],['肉類',/雞(?!蛋)|豬|牛(?!奶)|羊|排骨|肉|鴨|培根|香腸|滷/],['蔬菜',/菜|豆腐|茄|瓜|菇|蛋|馬鈴薯|玉米|青椒/]];
+function guessRCat(t){ for(var i=0;i<RCAT_KW.length;i++){ if(RCAT_KW[i][1].test(t))return RCAT_KW[i][0]; } return '其他'; }
+function loadRecipes(){ try{ var raw=localStorage.getItem(RKEY); recipes=raw?JSON.parse(raw):[]; if(!Array.isArray(recipes))recipes=[]; }catch(e){recipes=[]} }
+function saveRecipes(){ try{localStorage.setItem(RKEY,JSON.stringify(recipes))}catch(e){ rMsg('儲存空間不足，請先匯出備份。',true) } }
+function rMsg(m,warn){ var p=$('rStatus'); p.textContent=m||''; p.className=warn?'warn':''; }
+function rclean(o){
+  o=o||{}; var r=parseInt(o.rating,10); if(!(r>=0))r=0; if(r>5)r=5;
+  var tags=Array.isArray(o.tags)?o.tags:(typeof o.tags==='string'?o.tags.split(/[,，、]/):[]);
+  return {
+    name:str(o.name).slice(0,40), category:RCATS.indexOf(o.category)>-1?o.category:'其他', time:str(o.time).slice(0,20),
+    ingredients:String(o.ingredients==null?'':o.ingredients).trim().slice(0,2000), steps:String(o.steps==null?'':o.steps).trim().slice(0,5000),
+    rating:r, tags:tags.map(str).filter(Boolean).slice(0,3), url:httpOnly(o.url), img:httpOnly(o.img), cooked:!!o.cooked
+  };
+}
+function rSections(t){
+  var im=t.search(/(?:食材|材料)\s*[:：]?/), sm=t.search(/(?:作法|做法|步驟)\s*[:：]?/), ing='', steps='';
+  if(im>-1){ var e=(sm>im)?sm:t.length; ing=t.slice(im,e).replace(/^(?:食材|材料)\s*[:：]?\s*/,'').trim(); }
+  if(sm>-1){ var e2=(im>sm)?im:t.length; steps=t.slice(sm,e2).replace(/^(?:作法|做法|步驟)\s*[:：]?\s*/,'').trim(); }
+  return {ing:ing,steps:steps};
+}
+async function rParseBlock(b){
+  var urls=b.match(URL_RE)||[], own=b.replace(URL_RE,' ').trim(), src=(urls[0]||'').replace(/[)）、，。]+$/,''), meta=null;
+  if(src)meta=await fetchMeta(src);
+  var firstLine=own.split('\n').map(function(x){return x.trim()}).filter(Boolean)[0]||'';
+  var name=firstLine?cleanTitle(firstLine):(meta&&meta.title?cleanTitle(meta.title):'');
+  if(!name)return null;
+  var body=own?own.slice(own.indexOf(firstLine)+firstLine.length):'', sec=rSections(body||'');
+  if(!sec.ing&&!sec.steps&&meta&&meta.desc)sec=rSections(meta.desc);
+  if(own&&!sec.ing&&!sec.steps&&body.trim())sec.steps=body.trim();
+  var tm=(own+' '+(meta?meta.title+' '+meta.desc:'')).match(/(\d{1,3})\s*(?:分鐘|分)/);
+  var r=rclean({name:name,url:src,img:meta&&meta.img,ingredients:sec.ing,steps:sec.steps,time:tm?tm[1]+' 分鐘':'',category:guessRCat(name+' '+sec.ing)});
+  r.id=newId(); r.createdAt=Date.now(); r.failed=!!(src&&meta&&!meta.title&&!meta.desc&&!own);
+  return r;
+}
+async function rIngest(){
+  var text=$('rPaste').value.trim(); if(!text){ rMsg('請先貼上網址或食譜內容。',true); return; }
+  var btn=$('rGo'); btn.disabled=true; btn.innerHTML='<svg class="ic mr-1 ic-spin" aria-hidden="true"><use href="#i-spinner"/></svg>解析中…'; rMsg('');
+  var urls=(text.match(URL_RE)||[]), rest=text.replace(URL_RE,' ').trim();
+  var blocks=(urls.length>1&&!rest)?urls.slice(0,15):[text], added=[], dup=0, fail=0, keys={};
+  recipes.forEach(function(r){ keys[r.name]=1; });
+  for(var i=0;i<blocks.length;i++){
+    var r=null; try{ r=await rParseBlock(blocks[i]); }catch(e){}
+    if(!r||r.failed){ fail++; continue; }
+    delete r.failed;
+    if(keys[r.name]){ dup++; continue; }
+    keys[r.name]=1; recipes.unshift(r); added.push(r);
+  }
+  btn.disabled=false; btn.innerHTML='<svg class="ic mr-1" aria-hidden="true"><use href="#i-wand"/></svg>自動收納';
+  if(added.length){
+    rFresh={}; added.forEach(function(a){rFresh[a.id]=1}); rui={cat:'',cook:'',q:''}; $('rq').value=''; $('rPaste').value='';
+    saveRecipes(); rRender();
+    var msg='已收納 '+added.length+' 道：'+added.slice(0,3).map(function(a){return a.name}).join('、')+(added.length>3?' 等':'')+'。';
+    if(dup)msg+=' 另有 '+dup+' 道已收藏過。';
+    if(fail)msg+=' 有 '+fail+' 個網址讀不到內容，請貼上食譜文字。';
+    rMsg(msg,!!fail);
+  }else{
+    rMsg(dup?'這道食譜已經收藏過了。':(fail?'讀不到網址內容（該網站可能擋讀取），請把食譜文字貼上，或按「手動新增」。':'沒有找到食譜資訊。'),true);
+  }
+}
+function rFiltered(){
+  var q=norm(rui.q.toLowerCase());
+  return recipes.filter(function(r){
+    if(rui.cat&&r.category!==rui.cat)return false;
+    if(rui.cook==='yes'&&!r.cooked)return false;
+    if(rui.cook==='no'&&r.cooked)return false;
+    if(q){ var hay=norm([r.name,r.ingredients,r.category,(r.tags||[]).join(' ')].join(' ').toLowerCase()); if(hay.indexOf(q)<0)return false; }
+    return true;
+  });
+}
+function rCard(r){
+  var h='<article class="card'+(rFresh[r.id]?' fresh':'')+(r.cooked?' eaten':'')+'">';
+  h+='<div class="card-top"><span class="stamp">'+esc(r.category)+'</span>'+stars(r.rating||0)+'</div>';
+  if(r.img)h+='<img class="w-full h-36 object-cover rounded-lg" style="border:1.5px solid var(--line)" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" src="'+esc(r.img)+'">';
+  h+='<h4>'+esc(r.name)+'</h4>';
+  if(r.ingredients||r.steps){
+    h+='<details class="rdet"><summary>食材與作法</summary>';
+    if(r.ingredients)h+='<div class="rdet-b"><b>食材</b><div class="pre">'+esc(r.ingredients)+'</div></div>';
+    if(r.steps)h+='<div class="rdet-b"><b>作法</b><div class="pre">'+esc(r.steps)+'</div></div>';
+    h+='</details>';
+  }
+  if(r.tags&&r.tags.length)h+='<div class="tags">'+r.tags.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div>';
+  h+='<div class="card-foot"><span class="price">'+(r.time?'<svg class="ic mr-1" aria-hidden="true"><use href="#i-clock"/></svg>'+esc(r.time):'')+'</span><div class="acts">';
+  h+='<button type="button" class="ico eat" data-rcook="'+esc(r.id)+'" aria-pressed="'+(r.cooked?'true':'false')+'" title="點一下切換已做過／還沒做"><svg class="ic" aria-hidden="true"><use href="#i-'+(r.cooked?'check':'pot')+'"/></svg>'+(r.cooked?'已做過':'還沒做')+'</button>';
+  if(r.url)h+='<a class="ico" href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer" title="開啟食譜來源" aria-label="開啟食譜來源"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></a>';
+  h+='<button type="button" class="ico" data-redit="'+esc(r.id)+'" aria-label="編輯 '+esc(r.name)+'"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>編輯</button>';
+  return h+'</div></div></article>';
+}
+function rRender(){
+  bkSync();
+  var has=recipes.length>0; $('rEmpty').hidden=has; $('rFilters').hidden=!has;
+  var nc=recipes.filter(function(r){return r.cooked}).length;
+  $('rStats').innerHTML=has?'共 <b>'+recipes.length+'</b> 道，已做過 <b>'+nc+'</b> 道':'';
+  if(!has){ $('rList').innerHTML=''; return; }
+  function opt(v,l,sel){ return '<option value="'+esc(v)+'"'+(sel?' selected':'')+'>'+esc(l)+'</option>'; }
+  var cats={}; recipes.forEach(function(r){ cats[r.category]=(cats[r.category]||0)+1; });
+  if(rui.cat&&!cats[rui.cat])rui.cat='';
+  var h=opt('','全部類別（'+recipes.length+'）',!rui.cat);
+  RCATS.forEach(function(c){ if(cats[c])h+=opt(c,c+'（'+cats[c]+'）',rui.cat===c); });
+  $('rSelCat').innerHTML=h;
+  $('rSelCook').innerHTML=opt('','全部',!rui.cook)+opt('no','還沒做（'+(recipes.length-nc)+'）',rui.cook==='no')+opt('yes','已做過（'+nc+'）',rui.cook==='yes');
+  var list=rFiltered();
+  if(!list.length){ $('rList').innerHTML='<div class="empty"><strong>沒有符合的食譜</strong></div>'; return; }
+  var out='';
+  RCATS.forEach(function(c){
+    var g=list.filter(function(r){return r.category===c}); if(!g.length)return;
+    out+='<section class="city"><div class="sign"><h2>'+esc(c)+'</h2><span>'+g.length+' 道</span></div><div class="grid">'+g.map(rCard).join('')+'</div></section>';
+  });
+  $('rList').innerHTML=out;
+}
+function openR(id){
+  var r=id?recipes.find(function(x){return x.id===id}):null; if(id&&!r)return;
+  rEditing=id||''; r=r||rclean({});
+  $('rdTitle').textContent=id?'編輯食譜':'新增食譜';
+  $('r-name').value=r.name; fillSelect($('r-cat'),RCATS.map(function(c){return [c,c]}),r.category);
+  $('r-time').value=r.time;
+  fillSelect($('r-rating'),[['0','未評分'],['1','1 顆星'],['2','2 顆星'],['3','3 顆星'],['4','4 顆星'],['5','5 顆星']],String(r.rating||0));
+  $('r-tags').value=(r.tags||[]).join('，'); $('r-url').value=r.url; $('r-ing').value=r.ingredients; $('r-steps').value=r.steps;
+  var d=$('rdel'); d.hidden=!id; d.innerHTML='<svg class="ic mr-1" aria-hidden="true"><use href="#i-trash"/></svg>刪除'; d.dataset.armed='';
+  var dlg=$('rdlg'); if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open','');
+}
+function closeR(){ var dlg=$('rdlg'); if(dlg.close)dlg.close(); else dlg.removeAttribute('open'); rEditing=''; }
+function showPick(r){
+  $('pickHint').innerHTML='<svg class="ic mr-1" aria-hidden="true"><use href="#i-dice"/></svg>今天吃…';
+  $('pickName').textContent=r.name;
+  var b='<div class="flex flex-wrap items-center justify-center gap-3"><span class="stamp">'+esc(r.category)+'</span>'+(r.time?'<span class="price"><svg class="ic mr-1" aria-hidden="true"><use href="#i-clock"/></svg>'+esc(r.time)+'</span>':'')+stars(r.rating||0)+'</div>';
+  if(r.ingredients)b+='<div class="rdet-b"><b>食材</b><div class="pre">'+esc(r.ingredients)+'</div></div>';
+  if(r.steps)b+='<div class="rdet-b"><b>作法</b><div class="pre">'+esc(r.steps)+'</div></div>';
+  if(r.url)b+='<a class="btn text-center" href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer"><svg class="ic mr-1" aria-hidden="true"><use href="#i-book"/></svg>開啟食譜來源</a>';
+  $('pickBody').innerHTML=b;
+}
+function doPick(){
+  var pool=rFiltered(); if(!pool.length){ rMsg('沒有可抽的食譜，請先新增或調整篩選。',true); return; }
+  var fin; do{ fin=pool[Math.floor(Math.random()*pool.length)]; }while(pool.length>1&&fin.id===lastPick);
+  lastPick=fin.id; clearInterval(pickTimer);
+  var dlg=$('pickDlg'); if(!dlg.open){ if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open',''); }
+  $('pickBody').innerHTML='';
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce||pool.length===1){ showPick(fin); return; }
+  var n=0; $('pickHint').innerHTML='<svg class="ic mr-1 ic-bounce" aria-hidden="true"><use href="#i-dice"/></svg>抽籤中…';
+  pickTimer=setInterval(function(){ $('pickName').textContent=pool[Math.floor(Math.random()*pool.length)].name; if(++n>=12){ clearInterval(pickTimer); showPick(fin); } },80);
+}
+$('rGo').addEventListener('click',rIngest);
+$('rManual').addEventListener('click',function(){ openR(''); });
+$('rq').addEventListener('input',function(e){ rui.q=e.target.value; rRender(); });
+$('rSelCat').addEventListener('change',function(e){ rui.cat=e.target.value; rFresh={}; rRender(); });
+$('rSelCook').addEventListener('change',function(e){ rui.cook=e.target.value; rFresh={}; rRender(); });
+$('rList').addEventListener('click',function(e){
+  var t=e.target.closest('[data-rcook]');
+  if(t){ var r=recipes.find(function(x){return x.id===t.getAttribute('data-rcook')}); if(r){ r.cooked=!r.cooked; rFresh={}; saveRecipes(); rRender(); } return; }
+  var b=e.target.closest('[data-redit]'); if(b)openR(b.getAttribute('data-redit'));
+});
+$('rcancel').addEventListener('click',closeR);
+$('rdel').addEventListener('click',function(){
+  var d=$('rdel');
+  if(d.dataset.armed!=='1'){ d.dataset.armed='1'; d.textContent='再按一次確認刪除'; return; }
+  var id=rEditing; closeR(); recipes=recipes.filter(function(x){return x.id!==id}); saveRecipes(); rRender();
+});
+$('rForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var c=rclean({name:$('r-name').value,category:$('r-cat').value,time:$('r-time').value,rating:$('r-rating').value,tags:$('r-tags').value,url:$('r-url').value,ingredients:$('r-ing').value,steps:$('r-steps').value});
+  if(!c.name)return;
+  var i=recipes.findIndex(function(x){return x.id===rEditing});
+  if(i>-1){ recipes[i]=Object.assign({},recipes[i],c); }
+  else{ c.id=newId(); c.createdAt=Date.now(); rFresh={}; rFresh[c.id]=1; recipes.unshift(c); }
+  closeR(); saveRecipes(); rRender();
+});
+$('rPick').addEventListener('click',doPick);
+$('pickAgain').addEventListener('click',doPick);
+$('pickClose').addEventListener('click',function(){ $('pickDlg').close?$('pickDlg').close():$('pickDlg').removeAttribute('open'); });
+$('pickDlg').addEventListener('close',function(){ clearInterval(pickTimer); });
+
+/* ---------- backup (美食 / 食譜 各自獨立) ---------- */
+var DS={
+  food:{get:function(){return foods},set:function(v){foods=v},save:function(){saveLocal()},render:function(){render()},clean:clean,key:function(f){return f.name+'|'+f.district},file:'shicang-food-',
+    mine:function(x){return !('ingredients' in x||'steps' in x)},reset:function(){ui={city:'',district:'',cat:'',eat:'',q:''};$('q').value='';freshIds={};}},
+  recipe:{get:function(){return recipes},set:function(v){recipes=v},save:function(){saveRecipes()},render:function(){rRender()},clean:rclean,key:function(f){return f.name},file:'shicang-recipes-',
+    mine:function(x){return !('city' in x||'recommend' in x||'address' in x)||('ingredients' in x||'steps' in x)},reset:function(){rui={cat:'',cook:'',q:''};$('rq').value='';rFresh={};}}
+};
+var bkCur='food';
 function bkMsg(m,warn){ var p=$('bkMsg'); p.textContent=m||''; p.className=warn?'warn':''; }
-function jsonText(){ return JSON.stringify(foods,null,1); }
+function bkSync(){
+  var d=DS[bkCur]; $('bkCount').textContent='目前共 '+d.get().length+' 筆紀錄';
+  $('bkTitle').textContent='備份';
+  document.querySelectorAll('#bkTabs [data-bk]').forEach(function(x){ x.setAttribute('aria-selected',x.getAttribute('data-bk')===bkCur?'true':'false'); });
+}
+document.querySelectorAll('#bkTabs [data-bk]').forEach(function(b){ b.addEventListener('click',function(){ bkCur=b.getAttribute('data-bk'); bkMsg(''); bkSync(); }); });
+function jsonText(){ return JSON.stringify(DS[bkCur].get().map(function(x){ var c=Object.assign({},x); return c; }),null,1); }
 $('bkDl').addEventListener('click',function(){
   var b=new Blob([jsonText()],{type:'application/json'}), a=document.createElement('a');
-  a.href=URL.createObjectURL(b); a.download='shicang-'+new Date().toISOString().slice(0,10)+'.json'; document.body.appendChild(a); a.click(); a.remove();
-  bkMsg('已下載 '+foods.length+' 間。');
+  a.href=URL.createObjectURL(b); a.download=DS[bkCur].file+new Date().toISOString().slice(0,10)+'.json'; document.body.appendChild(a); a.click(); a.remove();
+  bkMsg('已下載 '+DS[bkCur].get().length+' 筆。');
 });
 $('bkCopy').addEventListener('click',async function(){
   var t=jsonText(), ok=false;
   try{ await navigator.clipboard.writeText(t); ok=true; }catch(e){}
   if(!ok){ try{ var ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); ok=document.execCommand('copy'); ta.remove(); }catch(e){} }
-  bkMsg(ok?'已複製 '+foods.length+' 間的 JSON 文字。':'複製失敗，請改用下載 JSON。',!ok);
+  bkMsg(ok?'已複製 '+DS[bkCur].get().length+' 筆的 JSON 文字。':'複製失敗，請改用下載 JSON。',!ok);
 });
 function restore(text){
-  var d; try{ d=JSON.parse(text); }catch(e){ bkMsg('JSON 格式不正確。',true); return false; }
+  var D=DS[bkCur], d;
+  try{ d=JSON.parse(text); }catch(e){ bkMsg('JSON 格式不正確。',true); return false; }
   if(d&&!Array.isArray(d)&&Array.isArray(d.foods))d=d.foods;
+  if(d&&!Array.isArray(d)&&Array.isArray(d.recipes))d=d.recipes;
   if(!Array.isArray(d)){ bkMsg('JSON 格式不正確。',true); return false; }
-  var list=[]; d.forEach(function(x){ if(x&&x.name){ var c=clean(x); if(!c.name)return; c.id=str(x.id)||newId(); c.createdAt=x.createdAt||Date.now(); list.push(c); } });
-  if(!list.length){ bkMsg('備份裡沒有店家資料。',true); return false; }
-  var mode=(document.querySelector('input[name="rmode"]:checked')||{}).value;
+  var raw=d.filter(function(x){return x&&x.name});
+  if(raw.length&&!D.mine(raw[0])){ bkMsg('這份備份不是'+(bkCur==='food'?'美食':'食譜')+'備份，請切換到另一個備份分頁。',true); return false; }
+  var list=[]; raw.forEach(function(x){ var c=D.clean(x); if(!c.name)return; c.id=str(x.id)||newId(); c.createdAt=x.createdAt||Date.now(); list.push(c); });
+  if(!list.length){ bkMsg('備份裡沒有資料。',true); return false; }
+  var cur=D.get(), mode=(document.querySelector('input[name="rmode"]:checked')||{}).value;
   if(mode==='replace'){
-    if(!confirm('覆蓋會取代目前的 '+foods.length+' 間，改成備份的 '+list.length+' 間。確定嗎？'))return false;
-    foods=list; bkMsg('已覆蓋，共 '+foods.length+' 間。');
+    if(!confirm('覆蓋會取代目前的 '+cur.length+' 筆，改成備份的 '+list.length+' 筆。確定嗎？'))return false;
+    D.set(list); bkMsg('已覆蓋，共 '+list.length+' 筆。');
   }else{
     var ids={}, keys={}, n=0, skip=0;
-    foods.forEach(function(f){ ids[f.id]=1; keys[f.name+'|'+f.district]=1; });
-    list.forEach(function(f){ if(ids[f.id]||keys[f.name+'|'+f.district]){skip++;return;} ids[f.id]=1; keys[f.name+'|'+f.district]=1; foods.push(f); n++; });
-    bkMsg('已合併：新增 '+n+' 間'+(skip?'，略過重複 '+skip+' 間':'')+'；現有資料保留。');
+    cur.forEach(function(f){ ids[f.id]=1; keys[D.key(f)]=1; });
+    list.forEach(function(f){ if(ids[f.id]||keys[D.key(f)]){skip++;return;} ids[f.id]=1; keys[D.key(f)]=1; cur.push(f); n++; });
+    bkMsg('已合併：新增 '+n+' 筆'+(skip?'，略過重複 '+skip+' 筆':'')+'；現有資料保留。');
   }
-  ui={city:'',district:'',cat:'',eat:'',q:''}; $('q').value=''; freshIds={};
-  saveLocal(); render(); return true;
+  D.reset(); D.save(); D.render(); bkSync(); return true;
 }
 $('bkFile').addEventListener('change',function(e){
   var file=e.target.files[0]; if(!file)return; var r=new FileReader();
@@ -614,7 +922,7 @@ $('bkPasteGo').addEventListener('click',function(){
 });
 
 /* ---------- boot ---------- */
-loadLocal(); setMode(); render();
+loadLocal(); loadRecipes(); setMode(); render(); rRender(); bkSync();
 })();
 </script>
 
