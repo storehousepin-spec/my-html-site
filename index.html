@@ -174,7 +174,7 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 .botnav button i{font-size:20px}
 .botnav button[aria-selected="true"]{background:var(--soft);border-color:var(--edge);color:var(--sign);font-weight:700}
 body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
-#bkTabs .tab{border-radius:14px;font-weight:700;min-height:46px;padding:10px 6px}
+#bkTabs .tab{border-radius:12px;font-weight:700;min-height:38px;padding:6px 8px;font-size:14px}
 .bk2{border-radius:20px}
 .botnav svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .botnav svg .f{fill:currentColor;fill-opacity:.08}
@@ -184,6 +184,10 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
 .ic-bounce{animation:icbounce .6s ease-in-out infinite alternate}
 @keyframes icspin{to{transform:rotate(360deg)}}
 @keyframes icbounce{to{transform:translateY(-3px) rotate(15deg)}}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0}
+.seg>*{min-width:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.flex{display:flex}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.gap-2{gap:8px}.gap-3{gap:12px}.text-center{text-align:center}.w-full{width:100%}
 </style>
 
 <div class="wrap">
@@ -212,7 +216,7 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
 
   <section class="filters" id="filters" hidden aria-label="篩選">
     <input class="search" id="q" type="search" placeholder="搜尋店名、菜色、地址" aria-label="搜尋">
-    <div class="grid grid-cols-2 gap-2">
+    <div class="seg">
       <label class="sel-l">縣市<select class="sel" id="selCity"></select></label>
       <label class="sel-l">區域<select class="sel" id="selDist"></select></label>
       <label class="sel-l">類別<select class="sel" id="selCat"></select></label>
@@ -241,10 +245,9 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
         <p id="rStatus" role="status"></p>
       </div>
     </details>
-    <p class="stats" id="rStats" aria-live="polite"></p>
     <section class="filters" id="rFilters" hidden aria-label="食譜篩選">
       <input class="search" id="rq" type="search" placeholder="搜尋食譜名稱、食材" aria-label="搜尋食譜">
-      <div class="grid grid-cols-2 gap-2">
+      <div class="seg">
         <label class="sel-l">類別<select class="sel" id="rSelCat"></select></label>
         <label class="sel-l">做過了嗎<select class="sel" id="rSelCook"></select></label>
       </div>
@@ -254,7 +257,7 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
   </div>
 
   <div class="view" id="viewBackup" hidden>
-    <div class="grid grid-cols-2 gap-2" id="bkTabs" role="tablist" aria-label="備份類型">
+    <div class="seg" id="bkTabs" role="tablist" aria-label="備份類型">
       <button type="button" class="tab" role="tab" aria-selected="true" data-bk="food">美食備份</button>
       <button type="button" class="tab" role="tab" aria-selected="false" data-bk="recipe">食譜備份</button>
     </div>
@@ -570,7 +573,7 @@ function render(){
   if(has&&!addTouched){ addTouched=true; $('addBox').open=false; }
   $('empty').hidden=has; $('filters').hidden=!has;
   var cities={}; foods.forEach(function(f){ var c=f.city||'未分類'; cities[c]=(cities[c]||0)+1; });
-  $('stats').innerHTML=has?'共 <b>'+foods.length+'</b> 間，已吃 <b>'+foods.filter(function(f){return f.eaten}).length+'</b> 間，<b>'+Object.keys(cities).length+'</b> 個縣市':'';
+  
   if(!has){ $('list').innerHTML=''; return; }
 
   var order=CITIES.concat(['未分類']);
@@ -652,6 +655,7 @@ document.querySelectorAll('#mainTabs [data-view]').forEach(function(b){
     var v=b.getAttribute('data-view');
     $('viewFood').hidden=v!=='food'; $('viewRecipe').hidden=v!=='recipe'; $('viewBackup').hidden=v!=='backup';
     document.querySelectorAll('#mainTabs [data-view]').forEach(function(x){ x.setAttribute('aria-selected',x===b?'true':'false'); });
+    curView=v; bkSync();
     window.scrollTo(0,0);
   });
 });
@@ -781,7 +785,7 @@ function rRender(){
   bkSync();
   var has=recipes.length>0; $('rEmpty').hidden=has; $('rFilters').hidden=!has;
   var nc=recipes.filter(function(r){return r.cooked}).length;
-  $('rStats').innerHTML=has?'共 <b>'+recipes.length+'</b> 道，已做過 <b>'+nc+'</b> 道':'';
+  
   if(!has){ $('rList').innerHTML=''; return; }
   function opt(v,l,sel){ return '<option value="'+esc(v)+'"'+(sel?' selected':'')+'>'+esc(l)+'</option>'; }
   var cats={}; recipes.forEach(function(r){ cats[r.category]=(cats[r.category]||0)+1; });
@@ -870,7 +874,19 @@ var DS={
 };
 var bkCur='food';
 function bkMsg(m,warn){ var p=$('bkMsg'); p.textContent=m||''; p.className=warn?'warn':''; }
+var curView='food';
+function headStats(){
+  var kind=curView==='backup'?bkCur:(curView==='recipe'?'recipe':'food'), h='';
+  if(kind==='recipe'){
+    if(recipes.length)h='共 <b>'+recipes.length+'</b> 樣食譜，已做 <b>'+recipes.filter(function(r){return r.cooked}).length+'</b> 樣';
+  }else if(foods.length){
+    var cs={}; foods.forEach(function(f){ cs[f.city||'未分類']=1; });
+    h='共 <b>'+foods.length+'</b> 間，已吃 <b>'+foods.filter(function(f){return f.eaten}).length+'</b> 間，<b>'+Object.keys(cs).length+'</b> 個縣市';
+  }
+  $('stats').innerHTML=h;
+}
 function bkSync(){
+  headStats();
   var d=DS[bkCur]; $('bkCount').textContent='目前共 '+d.get().length+' 筆紀錄';
   $('bkTitle').textContent='備份';
   document.querySelectorAll('#bkTabs [data-bk]').forEach(function(x){ x.setAttribute('aria-selected',x.getAttribute('data-bk')===bkCur?'true':'false'); });
